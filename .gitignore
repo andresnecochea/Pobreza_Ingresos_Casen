@@ -2,4 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-**/*.RData
+pobreza_ingresos_casen/*.RData
+Bases de Datos
+Bases de Datos/*
