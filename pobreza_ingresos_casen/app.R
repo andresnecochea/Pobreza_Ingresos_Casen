@@ -94,7 +94,7 @@ server <- function(input, output) {
                   casen2022_svy_subset <- subset(casen2022_svy_subset, edad <= 18)
                 },
                 "> 18, < 65" = {
-                  casen2022_svy_subset <- subset(casen2022_svy_subset, edad > 6 & edad < 65)
+                  casen2022_svy_subset <- subset(casen2022_svy_subset, edad > 18 & edad < 65)
                 },
                 ">= 65" =  {
                   casen2022_svy_subset <- subset(casen2022_svy_subset, edad >= 65)
@@ -120,7 +120,7 @@ server <- function(input, output) {
                                            levels = levels(casen2022_svy$variables[[input$agrupar_col]]))
       grafico <- datos %>%
         ggplot() +
-        aes_string(x="dau", y=variable_y, fill=input$agrupar_col) +
+        aes(x=dau, y=.data[[variable_y]], fill=.data[[input$agrupar_col]]) +
         geom_col(position = "dodge")
       
       if(input$agrupar_facet != "") {
@@ -136,8 +136,8 @@ server <- function(input, output) {
           scale_y_continuous(labels = label_number(scale=1e-3, suffix = "m"))
       }
 
-      subtitle <- paste("Según", input$agrupar_col)
-      if(input$agrupar_facet != "") subtitle <- paste(subtitle, input$agrupar_facet)
+      subtitle <- paste("Según", attr(casen2022_svy$variables[[input$agrupar_col]], "label"))
+      if(input$agrupar_facet != "") subtitle <- paste(subtitle, "y", attr(casen2022_svy$variables[[input$agrupar_facet]], "label"))
       grafico +
         labs(title="Media de ingreso por decil de ingreso autónomo",
              subtitle = subtitle,

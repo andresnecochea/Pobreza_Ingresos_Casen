@@ -2,6 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
-pobreza_ingresos_casen/*.RData
+pobreza_ingresos_casen/casen2022.RData
+rsconnect
+rsconnect/*
 Bases de Datos
 Bases de Datos/*
