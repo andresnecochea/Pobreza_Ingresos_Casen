@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+config.ini
 pobreza_ingresos_casen/casen2022.Rdata
 rsconnect
 rsconnect/*

@@ -1,14 +1,47 @@
 
 # Paquetes ----------------------------------------------------------------
 
+# Para leer el archivo de configuraciones
+library(ConfigParser)
+
 library(haven)
 library(survey)
 library(tidyverse)
 library(magrittr, include.only = "%<>%")
 
+# Directorio principal ----------------------------------------------------
+
+#   Se establece como directorio la ubicación del script actual.
+#   Estas líneas extraen el directorio en el que se ejecuta el script, debiese
+# funcionar si se ejecuta desde la consola o desde Rstudio.
+#
+# Advertencia: No ha sido testeado en otras interfaces gráficas para R.
+#
+dir_main <- if(rstudioapi::isAvailable()) {
+  dirname(rstudioapi::getSourceEditorContext()$path)
+} else {
+  dirname(getSrcDirectory(function(x) {x}))
+}
+if(dir_main=="") dir_main <- getwd()
+
+#   Fijamos el directorio en el que se encuentra el script como directorio de
+# trabajo.
+setwd(dir_main)
+
+
+# Leer configuración ------------------------------------------------------
+
+config <- ConfigParser$new()
+if(file.exists("config.ini")) {
+  config$read("config.ini")
+} else {
+  config$set("data", "Bases de Datos", "dirs", FALSE)
+  config$set("casen_file", "Base de datos Casen 2022 SPSS.sav", "casen", FALSE)
+}
+
 # Leer Datos --------------------------------------------------------------
 
-casen2022 <- read_spss("Bases de Datos/CASEN/2022/Base de datos Casen 2022 SPSS.sav")
+casen2022 <- read_spss(file.path(config$data$dirs$data, "CASEN", "2022", config$data$casen$casen_file))
 
 # Procesamiento -----------------------------------------------------------
 
@@ -32,13 +65,13 @@ casen2022 <- read_spss("Bases de Datos/CASEN/2022/Base de datos Casen 2022 SPSS.
 # ypc: Ingreso total per cápita del hogar corregido
 # ytrabajocor: Ingreso del trabajo corregido
 # ytrabajocorh: Ingreso del trabajo del hogar corregido
-# ymonecor: Ingreso monetario Corregido
+# ytotcor: Ingreso total corregido
 # ypchtrabcor: Ingreso del trabajo per cápita del hogar corregido
 # ypchautcor: Ingreso autónomo per cápita del hogar corregido
 
 casen2022 %<>%
   select(expr, estrato, region, id_vivienda, hogar, pco1_a, sexo, edad, pobreza,
-         tipohogar, dau, ypc, ytrabajocor, ytrabajocorh, ymonecor, ypchtrabcor,
+         tipohogar, dau, ypc, ytrabajocor, ytrabajocorh, ytotcor, ypchtrabcor,
          ypchautcor)
 
 # Crear las variables:
