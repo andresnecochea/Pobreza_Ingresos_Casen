@@ -34,6 +34,10 @@ El script `inicio.R` se encargará de descargar la base de datos, iniciar el pro
 
 Con esta app se podrá explorar interactivamente algunas variables seleccionadas de la encuesta CASEN. El gráfico mostrará la media de ingresos según decil de ingreso autónomo nacional. Se podrá seleccionar diferentes variables de ingreso, incluyendo ingreso autónomo, monetario, total y per cápita del hogar.
 
-A continuación se muestra algunos ejemplos. En primer lugar se muestra la media de ingreso del trabajo según decil de ingreso y sexo. ![](ejemplos/ingresotrabajo-sexo.png){width="75%"}
+A continuación se muestra algunos ejemplos. En primer lugar se muestra la media de ingreso del trabajo según decil de ingreso y sexo.
 
-En el segundo gráfico se muestra la media de ingreso total según decil de ingreso y sexo en mayores de 65 años. ![](ejemplos/ingresototal-sexo-mayores65.png){width="75%"}
+<img src="ejemplos/ingresotrabajo-sexo.png" width="75%" height="75%"/>
+
+En el segundo gráfico se muestra la media de ingreso total según decil de ingreso y sexo en mayores de 65 años.
+
+<img src="ejemplos/ingresototal-sexo-mayores65.png" width="75%" height="75%"/>
