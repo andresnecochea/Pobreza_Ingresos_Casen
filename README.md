@@ -26,4 +26,4 @@ El script `inicio.R` se encargará de descargar la base de datos, iniciar el pro
 
 -   Si deseas procesar los datos nuevamentes hay que correr el script `procesamiento.R`.
 
-- 
+- Para correr la app sin volver a procesar los datos ejecutar `pobreza_ingresos_casen/app.R`.
