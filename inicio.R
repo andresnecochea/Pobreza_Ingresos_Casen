@@ -124,8 +124,8 @@ if(!file.exists(file.path(dir_data, "CASEN", "2022", config$data$casen$casen_fil
 dlg_instalar_paquetes <- dlg_message("¿desea instalar los paquetes requeridos?",
                                      type="yesno")
 if(dlg_instalar_paquetes$res == "yes") {
-  paquetes_requeridos <- c("haven", "survey", "tidyverse", "magrittr", "scales",
-                           "shiny")
+  paquetes_requeridos <- c("haven", "survey", "tidyverse", "ggthemes",
+                           "paletteer", "magrittr", "scales", "shiny")
   paquetes_instalados <- installed.packages() |> rownames()
   install.packages(paquetes_requeridos[!paquetes_requeridos %in% paquetes_instalados])
 }
