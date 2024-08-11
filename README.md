@@ -1,5 +1,5 @@
 # Pobreza Ingresos Casen
-Genera datos para una Shiny App con datos de la encuesta CASEN
+Shiny App para explorar datos sobre pobreza y distribución de ingresos en la encuesta CASEN
 
 Para ver el resultado final se puede usar el siguiente link:
 https://andresnecochea.shinyapps.io/pobreza_ingresos_casen/
