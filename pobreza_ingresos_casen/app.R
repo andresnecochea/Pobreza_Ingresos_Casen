@@ -6,6 +6,8 @@ library(shiny)
 
 library(haven)
 library(tidyverse)
+library(ggthemes)
+library(paletteer)
 library(scales)
 library(survey)
 
@@ -145,7 +147,9 @@ server <- function(input, output) {
              y=label_y,
              fill=attr(casen2022_svy$variables[[input$agrupar_col]], "label"),
              caption="Autor: Andrés Necochea\n
-                      Fuente: Elaboración propia en base a datos de CASEN(2022)")
+                      Fuente: Elaboración propia en base a datos de CASEN(2022)") +
+        scale_fill_paletteer_d("ggthemes_ptol::qualitative", 1, dynamic=TRUE) +
+        theme_hc()
     })
     output$distPlot <- renderPlot({
       isolate(grafico_deciles())
