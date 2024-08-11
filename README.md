@@ -18,7 +18,9 @@ Se debe seguir una serie de pasos para que la app funcione correctamente.
 
 -   Para la configuración automática de la app se necesita instalar los paquetes `svDialogs` y `ConfigParser`, antes de correr la app. En la consola ejecutar:
 
-    `install.packages("svDialogs") install.packages("ConfigParser")`
+    `install.packages("svDialogs")`
+
+    `install.packages("ConfigParser")`
 
 -   Para descargar la encuesta CASEN y configurar la app se debe ejecutar el script: `inicio.R`.
 
@@ -26,4 +28,4 @@ El script `inicio.R` se encargará de descargar la base de datos, iniciar el pro
 
 -   Si deseas procesar los datos nuevamentes hay que correr el script `procesamiento.R`.
 
-- Para correr la app sin volver a procesar los datos ejecutar `pobreza_ingresos_casen/app.R`.
+-   Para correr la app sin volver a procesar los datos ejecutar `pobreza_ingresos_casen/app.R`.
