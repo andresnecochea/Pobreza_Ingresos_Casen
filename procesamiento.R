@@ -1,4 +1,6 @@
 
+cat("########## Iniciando Procesamiento de Datos ##########")
+
 # Paquetes ----------------------------------------------------------------
 
 # Para leer el archivo de configuraciones
@@ -97,3 +99,5 @@ casen2022_svy <- svydesign(~1, weights = ~expr, strata = ~estrato, data=casen202
 
 save(casen2022_svy, file="pobreza_ingresos_casen/casen2022.Rdata")
 #load("pobreza_ingresos_casen/casen2022.Rdata")
+
+cat("############ Datos generados correctamente ###########")

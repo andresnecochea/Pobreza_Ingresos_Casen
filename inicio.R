@@ -59,11 +59,8 @@ if(select_dir_yn$res == "no") {
   #   Si el directorio es diferente de "Bases de Datos" se crea un enlace
   # simbólico.
   dlg_dir_data <- dlg_dir(title="Seleccione un directorio para las bases de datos")
-  dir_data <- file.path(dir_main, "Bases de Datos")
+  dir_data <- dlg_dir_data$res
   config$data$dirs$data <- dir_data
-  if(dlg_dir_data$res != dir_data) {
-    file.symlink(dlg_dir_data$res, dir_data)
-  }
 }
 
 # Descargar Casen ---------------------------------------------------------
@@ -136,3 +133,19 @@ if(dlg_instalar_paquetes$res == "yes") {
 # Guardar configuración ---------------------------------------------------
 
 config$write("config.ini")
+
+# Ejecutar App ------------------------------------------------------------
+
+# Consultar al usuario si desea procesar los datos nuevamente
+if (file.exists("pobreza_ingresos_casen/casen2022.Rdata")) {
+  dlg_procesar_datos <- dlg_message(message = "¿Desea Procesar los datos nuevamente?", type="yesno")
+} else {
+  dlg_procesar_datos <- list(res="yes")
+}
+
+# Procesar los datos
+if(dlg_procesar_datos$res == "yes") {
+  source("procesamiento.R")
+}
+
+shiny::runApp("pobreza_ingresos_casen/app.R")
