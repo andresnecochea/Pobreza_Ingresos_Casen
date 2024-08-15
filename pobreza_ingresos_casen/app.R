@@ -206,13 +206,22 @@ server <- function(input, output) {
       grafico_pobreza <- datos |>
         filter(Value != 0) |>
         ggplot() +
-        aes(x=pobreza, y=Value, fill=.data[[input$agrupar_col]]) +
-        geom_col(position = "dodge")
+        aes(x=pobreza, y=Value, group=.data[[input$agrupar_col]]) +
+        geom_col(aes(fill=.data[[input$agrupar_col]]), position = "dodge")
       
       if(input$porcentaje) {
         label_y <- "Porcentaje"
         grafico_pobreza <- grafico_pobreza +
-          scale_y_continuous(label=label_percent())
+          geom_label(
+            aes(
+              y = Value + 0.0025,
+              label=paste0(prettyNum(Value*100, digits=2, decimal.mark=","), "%")
+              ),
+            vjust = "inward",
+            position = position_dodge(0.9)
+            ) +
+          scale_y_continuous(label=label_percent()) +
+          expand_limits(y = c(0, max(datos$Value)*1.1))
       } else {
         label_y <- paste("Cantidad de personas\n",
                          "(En Millones de personas)")
