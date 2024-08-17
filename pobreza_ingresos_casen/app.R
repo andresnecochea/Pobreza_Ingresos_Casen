@@ -77,21 +77,26 @@ server <- function(input, output) {
     
     casen_svy_subset <- reactive({
       casen2022_svy_subset <- casen2022_svy
+      attr(casen2022_svy_subset, "Filtro") <- ""
       
       # Aplica el filtro de edad
       if(input$filtro_edad != "") {
         switch (input$filtro_edad,
                 "<= 6" = {
                   casen2022_svy_subset <- subset(casen2022_svy_subset, edad <= 6)
+                  attr(casen2022_svy_subset, "Filtro") <- "menores de 6 años"
                 },
                 "<= 18" = {
                   casen2022_svy_subset <- subset(casen2022_svy_subset, edad <= 18)
+                  attr(casen2022_svy_subset, "Filtro") <- "menores de 18 años"
                 },
                 "> 18, < 65" = {
                   casen2022_svy_subset <- subset(casen2022_svy_subset, edad > 18 & edad < 65)
+                  attr(casen2022_svy_subset, "Filtro") <- "entre 18 y 65 años"
                 },
                 ">= 65" =  {
                   casen2022_svy_subset <- subset(casen2022_svy_subset, edad >= 65)
+                  attr(casen2022_svy_subset, "Filtro") <- "mayores de 65 años"
                 }
         )
       }
@@ -99,11 +104,26 @@ server <- function(input, output) {
       # Aplica el filtro de sexo
       if(input$filtro_sexo != "") {
         casen2022_svy_subset <- subset(casen2022_svy_subset, sexo == input$filtro_sexo)
+        if(input$filtro_edad != "") {
+          attr(casen2022_svy_subset, "Filtro") <- paste(c("Hombres", "Mujeres")[as.numeric(substr(input$filtro_sexo, 1, 1))], attr(casen2022_svy_subset, "Filtro"))
+        } else {
+          attr(casen2022_svy_subset, "Filtro") <- c("Hombres", "Mujeres")[as.numeric(substr(input$filtro_sexo, 1, 1))]
+        }
+      } else {
+        if(input$filtro_edad != "")
+          attr(casen2022_svy_subset, "Filtro") <- paste("Personas", attr(casen2022_svy_subset, "Filtro"))
       }
+
+      if(attr(casen2022_svy_subset, "Filtro") != "")
+        attr(casen2022_svy_subset, "Filtro") <- paste("En", attr(casen2022_svy_subset, "Filtro"))
+
       casen2022_svy_subset
     })
     
     grafico_deciles <- reactive({
+      
+      casen_svy_subset <- casen_svy_subset()
+      
       # La variable que se emplea en el eje Y es el valor solicitado o el n
       if(input$var_grafico == "Valor") {
         variable_y <- input$variable_y
@@ -123,9 +143,9 @@ server <- function(input, output) {
       }
       
       datos <- svyby(as.formula(paste("~", input$variable_y)),
-            as.formula(formula_grupos), casen_svy_subset(), svymean, na.rm=TRUE) %>%
+            as.formula(formula_grupos), casen_svy_subset, svymean, na.rm=TRUE) %>%
         left_join(
-          subset(casen_svy_subset(), !is.na(eval(parse(text=input$variable_y)))) |>
+          subset(casen_svy_subset, !is.na(eval(parse(text=input$variable_y)))) |>
             svytable(as.formula(formula_grupos), design=_) |>
             array2DF()
         ) %>%
@@ -157,9 +177,11 @@ server <- function(input, output) {
       }
 
       subtitle <- paste("Según", attr(casen2022_svy$variables[[input$agrupar_col]], "label"))
+      if(attr(casen_svy_subset, "Filtro") != "")
+        subtitle <- paste0(subtitle, ". ", attr(casen_svy_subset, "Filtro"))
       if(input$agrupar_facet != "") subtitle <- paste(subtitle, "y", attr(casen2022_svy$variables[[input$agrupar_facet]], "label"))
       grafico +
-        labs(title="Media de ingreso por decil de ingreso autónomo",
+        labs(title=paste("Media de", attr(casen2022_svy$variables[[input$variable_y]], "label"), "por decil de ingreso autónomo"),
              subtitle = subtitle,
              x=attr(casen2022_svy$variables$dau, "label"),
              y=label_y,
@@ -175,13 +197,20 @@ server <- function(input, output) {
     
     grafico_pobreza <- reactive({
 
+      casen_svy_subset <- casen_svy_subset()
+
       if(input$agrupar_facet == "") {
         formula_grupos <- paste("~pobreza +", input$agrupar_col)
+        vars_titulo <- attr(casen2022_svy$variables[[input$agrupar_col]], "label")
       } else {
         formula_grupos <- paste("~pobreza +", input$agrupar_col, "+", input$agrupar_facet)
+        vars_titulo <- paste(
+          attr(casen2022_svy$variables[[input$agrupar_col]], "label"), "y",
+          attr(casen2022_svy$variables[[input$agrupar_facet]], "label")
+        )
       }
       
-      datos <- svytable(as.formula(formula_grupos), casen_svy_subset())
+      datos <- svytable(as.formula(formula_grupos), casen_svy_subset)
 
       #   Si está activo el checkbox de porcentajes se calcula porcentajes 
       # para los márgenes superiores a la variable pobreza.
@@ -234,7 +263,12 @@ server <- function(input, output) {
           facet_wrap(as.formula(paste("~", input$agrupar_facet)))
       }
       grafico_pobreza +
-        labs(title = "Condición de pobreza",
+        labs(title = paste(
+                        attr(casen2022_svy$variables$pobreza, "label"),
+                        "según",
+                        vars_titulo
+                      ),
+             subtitle = attr(casen_svy_subset, "Filtro"),
              x = attr(casen2022_svy$variables$pobreza, "label"),
              y = label_y,
              fill=attr(casen2022_svy$variables[[input$agrupar_col]], "label"),

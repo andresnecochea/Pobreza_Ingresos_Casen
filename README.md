@@ -41,3 +41,7 @@ A continuación se muestra algunos ejemplos. En primer lugar se muestra la media
 En el segundo gráfico se muestra la media de ingreso total según decil de ingreso y sexo en mayores de 65 años.
 
 <img src="ejemplos/ingresototal-sexo-mayores65.png" width="75%" height="75%"/>
+
+En el tercer gráfico se muestra la pobreza infantil (En niños y niñas menores de seis años) según el sexo del jefe o jefa de hogar y el tipo de hogar
+
+<img src="ejemplos/pobrezainfantil-sexojh-tipohogar.png" width="75%" height="75%"/>
